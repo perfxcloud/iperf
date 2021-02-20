@@ -7,9 +7,12 @@
 # - Help: docker run iperf3 --help
 # - Server: docker run -p 5201:5201 -it iperf3 -s
 # - Client: docker run -it iperf3 -c 192.168.1.1 (note: since this is a minimal image and does not include DNS, name resolution will not work)
-FROM scratch
+# scratch results in a file not found error, possibly related to a missing dynamic library
+#FROM scratch
+FROM debian:latest
 COPY src/iperf3 /iperf3
 COPY tmp /tmp
 ENTRYPOINT ["/iperf3"]
 EXPOSE 5201
-CMD ["-s"]
+# This does not appear to actually cause the server to run in -s mode
+#CMD ["-s"]

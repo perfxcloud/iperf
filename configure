@@ -591,9 +591,9 @@ MAKEFLAGS=
 PACKAGE_NAME='iperf'
 PACKAGE_TARNAME='iperf'
 PACKAGE_VERSION='3.9+'
-PACKAGE_STRING='iperf 3.9+'
-PACKAGE_BUGREPORT='https://github.com/esnet/iperf'
-PACKAGE_URL='https://software.es.net/iperf/'
+PACKAGE_STRING='perfx.cloud iperf 3.9+'
+PACKAGE_BUGREPORT='https://github.com/perfxcloud/iperf'
+PACKAGE_URL='https://perfx.cloud'
 
 # Factoring default headers for most tests.
 ac_includes_default="\
