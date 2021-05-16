@@ -25,5 +25,4 @@ COPY src/iperf3 /iperf3
 COPY tmp /tmp
 ENTRYPOINT ["/iperf3"]
 EXPOSE 5201
-# This does not appear to actually cause the server to run in -s mode
-#CMD ["-s"]
+CMD ["-s"]
