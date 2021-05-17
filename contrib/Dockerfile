@@ -8,6 +8,17 @@
 # - Server: docker run -p 5201:5201 -it iperf3 -s
 # - Client: docker run -it iperf3 -c 192.168.1.1 (note: since this is a minimal image and does not include DNS, name resolution will not work)
 # scratch results in a file not found error, possibly related to a missing dynamic library
+
+# perfx.cloud details
+# - To run the iperf3 container, issue the following command:
+# sudo docker run -p 5201:5201/udp -p 5201:5201/tcp -it perfxcloud/iperf3 -s
+#
+# - To run the iperf3 container in the background:
+# sudo docker run -p 5201:5201/udp -p 5201:5201/tcp -it -d perfxcloud/iperf3 -s
+#
+# - To run the iperf3 container with JSON output:
+# sudo docker run -p 5201:5201/udp -p 5201:5201/tcp -it perfxcloud/iperf3 -s -J
+
 #FROM scratch
 FROM debian:latest
 COPY src/iperf3 /iperf3
