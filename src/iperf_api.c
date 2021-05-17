@@ -2667,8 +2667,7 @@ iperf_defaults(struct iperf_test *testp)
     http->connect = iperf_http_connect;
     http->send = iperf_http_send;
     http->recv = iperf_http_recv;
-    /* TODO: consider adding an HTTP init function */
-    http->init = NULL;
+    http->init = iperf_http_init;
     SLIST_INSERT_HEAD(&testp->protocols, http, protocols);
     /* end experimental perfx.cloud HTTP protocol */
 

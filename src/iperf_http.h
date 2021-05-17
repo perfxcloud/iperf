@@ -59,5 +59,9 @@ int iperf_http_listen(struct iperf_test *);
 
 int iperf_http_connect(struct iperf_test *);
 
+/**
+ * iperf_http_init -- initializes the HTTP test
+ */
+int iperf_http_init(struct iperf_test *);
 
 #endif

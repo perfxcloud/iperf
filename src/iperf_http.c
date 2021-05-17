@@ -641,3 +641,14 @@ iperf_http_connect(struct iperf_test *test)
 
     return s;
 }
+
+/**
+ * iperf_http_init
+ * experimental HTTP test initialization
+ */
+int 
+iperf_http_init(struct iperf_test * test)
+{
+    warning("iperf_http_init invoked");
+    return 0;
+}
