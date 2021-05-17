@@ -930,6 +930,7 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
         {"server", no_argument, NULL, 's'},
         {"client", required_argument, NULL, 'c'},
         {"udp", no_argument, NULL, 'u'},
+	{"http", no_argument, NULL, OPT_HTTP},
         {"bitrate", required_argument, NULL, 'b'},
         {"bandwidth", required_argument, NULL, 'b'},
 	{"server-bitrate-limit", required_argument, NULL, OPT_SERVER_BITRATE_LIMIT},
@@ -1093,6 +1094,9 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 set_protocol(test, Pudp);
 		client_flag = 1;
                 break;
+	    case OPT_HTTP:
+		warning("HTTP flag set");
+		break;
             case OPT_SCTP:
 #if defined(HAVE_SCTP_H)
                 set_protocol(test, Psctp);
