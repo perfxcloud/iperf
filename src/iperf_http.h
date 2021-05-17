@@ -24,40 +24,40 @@
  * This code is distributed under a BSD style license, see the LICENSE
  * file for complete information.
  */
-#ifndef        IPERF_TCP_H
-#define        IPERF_TCP_H
+#ifndef        IPERF_HTTP_H
+#define        IPERF_HTTP_H
 
 
 /**
- * iperf_tcp_accept -- accepts a new TCP connection
- * on tcp_listener_socket for TCP data and param/result
+ * iperf_http_accept -- accepts a new TCP connection
+ * on http_listener_socket for TCP data and param/result
  * exchange messages
  *returns 0 on success
  *
  */
-int iperf_tcp_accept(struct iperf_test *);
+int iperf_http_accept(struct iperf_test *);
 
 /**
- * iperf_tcp_recv -- receives the data for TCP
+ * iperf_http_recv -- receives the data for TCP
  * and the Param/result message exchange
  *returns state of packet received
  *
  */
-int iperf_tcp_recv(struct iperf_stream *);
+int iperf_http_recv(struct iperf_stream *);
 
 
 /**
- * iperf_tcp_send -- sends the client data for TCP
+ * iperf_http_send -- sends the client data for TCP
  * and the  Param/result message exchanges
  * returns: bytes sent
  *
  */
-int iperf_tcp_send(struct iperf_stream *) /* __attribute__((hot)) */;
+int iperf_http_send(struct iperf_stream *) /* __attribute__((hot)) */;
 
 
-int iperf_tcp_listen(struct iperf_test *);
+int iperf_http_listen(struct iperf_test *);
 
-int iperf_tcp_connect(struct iperf_test *);
+int iperf_http_connect(struct iperf_test *);
 
 
 #endif

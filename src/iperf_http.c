@@ -40,7 +40,7 @@
 
 #include "iperf.h"
 #include "iperf_api.h"
-#include "iperf_tcp.h"
+#include "iperf_http.h"
 #include "net.h"
 #include "cjson.h"
 
@@ -48,16 +48,16 @@
 #include "flowlabel.h"
 #endif /* HAVE_FLOWLABEL */
 
-/* iperf_tcp_recv
+/* iperf_http_recv
  *
- * receives the data for TCP
+ * receives the data for HTTP 
  */
 int
-iperf_tcp_recv(struct iperf_stream *sp)
+iperf_http_recv(struct iperf_stream *sp)
 {
     int r;
 
-    r = Nread(sp->socket, sp->buffer, sp->settings->blksize, Ptcp);
+    r = Nread(sp->socket, sp->buffer, sp->settings->blksize, Phttp);
 
     if (r < 0)
         return r;
@@ -76,12 +76,12 @@ iperf_tcp_recv(struct iperf_stream *sp)
 }
 
 
-/* iperf_tcp_send 
+/* iperf_http_send 
  *
- * sends the data for TCP
+ * sends the data for HTTP 
  */
 int
-iperf_tcp_send(struct iperf_stream *sp)
+iperf_http_send(struct iperf_stream *sp)
 {
     int r;
 
@@ -91,7 +91,7 @@ iperf_tcp_send(struct iperf_stream *sp)
     if (sp->test->zerocopy)
 	r = Nsendfile(sp->buffer_fd, sp->socket, sp->buffer, sp->pending_size);
     else
-	r = Nwrite(sp->socket, sp->buffer, sp->pending_size, Ptcp);
+	r = Nwrite(sp->socket, sp->buffer, sp->pending_size, Phttp);
 
     if (r < 0)
         return r;
@@ -108,12 +108,12 @@ iperf_tcp_send(struct iperf_stream *sp)
 }
 
 
-/* iperf_tcp_accept
+/* iperf_http_accept
  *
- * accept a new TCP stream connection
+ * accept a new HTTP stream connection
  */
 int
-iperf_tcp_accept(struct iperf_test * test)
+iperf_http_accept(struct iperf_test * test)
 {
     int     s;
     signed char rbuf = ACCESS_DENIED;
@@ -127,13 +127,13 @@ iperf_tcp_accept(struct iperf_test * test)
         return -1;
     }
 
-    if (Nread(s, cookie, COOKIE_SIZE, Ptcp) < 0) {
+    if (Nread(s, cookie, COOKIE_SIZE, Phttp) < 0) {
         i_errno = IERECVCOOKIE;
         return -1;
     }
 
     if (strcmp(test->cookie, cookie) != 0) {
-        if (Nwrite(s, (char*) &rbuf, sizeof(rbuf), Ptcp) < 0) {
+        if (Nwrite(s, (char*) &rbuf, sizeof(rbuf), Phttp) < 0) {
             i_errno = IESENDMESSAGE;
             return -1;
         }
@@ -144,12 +144,12 @@ iperf_tcp_accept(struct iperf_test * test)
 }
 
 
-/* iperf_tcp_listen
+/* iperf_http_listen
  *
- * start up a listener for TCP stream connections
+ * start up a listener for HTTP stream connections
  */
 int
-iperf_tcp_listen(struct iperf_test *test)
+iperf_http_listen(struct iperf_test *test)
 {
     int s, opt;
     socklen_t optlen;
@@ -360,15 +360,15 @@ iperf_tcp_listen(struct iperf_test *test)
 }
 
 
-/* iperf_tcp_connect
+/* iperf_http_connect
  *
- * connect to a TCP stream listener
+ * connect to a HTTP stream listener
  * This function is roughly similar to netdial(), and may indeed have
- * been derived from it at some point, but it sets many TCP-specific
+ * been derived from it at some point, but it sets many HTTP-specific
  * options between socket creation and connection.
  */
 int
-iperf_tcp_connect(struct iperf_test *test)
+iperf_http_connect(struct iperf_test *test)
 {
     struct addrinfo hints, *local_res, *server_res;
     char portstr[6];
@@ -631,7 +631,7 @@ iperf_tcp_connect(struct iperf_test *test)
     freeaddrinfo(server_res);
 
     /* Send cookie for verification */
-    if (Nwrite(s, test->cookie, COOKIE_SIZE, Ptcp) < 0) {
+    if (Nwrite(s, test->cookie, COOKIE_SIZE, Phttp) < 0) {
 	saved_errno = errno;
 	close(s);
 	errno = saved_errno;
