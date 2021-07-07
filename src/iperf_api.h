@@ -57,6 +57,9 @@ typedef uint64_t iperf_size_t;
 #define DEFAULT_UDP_BLKSIZE 1460 /* default is dynamically set, else this */
 #define DEFAULT_TCP_BLKSIZE (128 * 1024)  /* default read/write block size */
 #define DEFAULT_SCTP_BLKSIZE (64 * 1024)
+#define DEFAULT_PACING_TIMER 1000
+#define DEFAULT_NO_MSG_RCVD_TIMEOUT 120000
+#define MIN_NO_MSG_RCVD_TIMEOUT 100
 
 /* short option equivalents, used to support options that only have long form */
 #define OPT_SCTP 1
@@ -84,7 +87,8 @@ typedef uint64_t iperf_size_t;
 #define OPT_BIND_DEV 24
 #define OPT_IDLE_TIMEOUT 25
 #define OPT_DONT_FRAGMENT 26
-#define OPT_HTTP 27
+#define OPT_RCV_TIMEOUT 27
+#define OPT_HTTP 28 
 
 /* states */
 #define TEST_START 1
@@ -275,6 +279,7 @@ int has_tcpinfo_retransmits(void);
 void save_tcpinfo(struct iperf_stream *sp, struct iperf_interval_results *irp);
 long get_total_retransmits(struct iperf_interval_results *irp);
 long get_snd_cwnd(struct iperf_interval_results *irp);
+long get_snd_wnd(struct iperf_interval_results *irp);
 long get_rtt(struct iperf_interval_results *irp);
 long get_rttvar(struct iperf_interval_results *irp);
 long get_pmtu(struct iperf_interval_results *irp);
@@ -374,6 +379,8 @@ enum {
     IETOTALINTERVAL = 28,   // Invalid time interval for calculating average data rate
     IESKEWTHRESHOLD = 29,   // Invalid value specified as skew threshold
     IEIDLETIMEOUT = 30,     // Invalid value specified as idle state timeout
+    IERCVTIMEOUT = 31,      // Illegal message receive timeout
+    IERVRSONLYRCVTIMEOUT = 32,  // Client receive timeout is valid only in reverse mode
     /* Test errors */
     IENEWTEST = 100,        // Unable to create a new test (check perror)
     IEINITTEST = 101,       // Test initialization failed (check perror)

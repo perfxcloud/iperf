@@ -39,7 +39,11 @@
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
+#ifdef HAVE_LINUX_TCP_H
+#include <linux/tcp.h>
+#else
 #include <netinet/tcp.h>
+#endif
 #include <net/if.h> // for IFNAMSIZ
 
 #if defined(HAVE_CPUSET_SETAFFINITY)
@@ -100,6 +104,7 @@ struct iperf_interval_results
     int interval_retrans;
     int interval_sacks;
     int snd_cwnd;
+    int snd_wnd;
     TAILQ_ENTRY(iperf_interval_results) irlistentries;
     void     *custom_data;
     int rtt;
@@ -123,6 +128,7 @@ struct iperf_stream_result
     int stream_sum_rtt;
     int stream_count_rtt;
     int stream_max_snd_cwnd;
+    int stream_max_snd_wnd;
     struct iperf_time start_time;
     struct iperf_time end_time;
     struct iperf_time start_time_fixed;
@@ -162,6 +168,7 @@ struct iperf_settings
 #endif // HAVE_SSL
     int	      connect_timeout;	    /* socket connection timeout, in ms */
     int       idle_timeout;         /* server idle time timeout */
+    struct iperf_time rcv_timeout;  /* Timeout for receiving messages in active mode, in us */
 };
 
 struct iperf_test;
@@ -383,6 +390,8 @@ struct iperf_test
 /* default settings */
 #define PORT 5201  /* default port to listen on (don't use the same port as iperf2) */
 #define uS_TO_NS 1000
+#define mS_TO_US 1000
+#define SEC_TO_mS 1000
 #define SEC_TO_US 1000000LL
 #define UDP_RATE (1024 * 1024) /* 1 Mbps */
 #define OMIT 0 /* seconds */
@@ -407,7 +416,6 @@ struct iperf_test
 #define MAX_BURST 1000
 #define MAX_MSS (9 * 1024)
 #define MAX_STREAMS 128
-#define NO_MSG_RCVD_TIMEOUT 120
 
 #define TIMESTAMP_FORMAT "%c "
 
