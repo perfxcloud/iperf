@@ -1,4 +1,4 @@
-# iperf, Copyright (c) 2014-2021, The Regents of the University of
+# iperf, Copyright (c) 2014-2022, The Regents of the University of
 # California, through Lawrence Berkeley National Laboratory (subject
 # to receipt of any required approvals from the U.S. Dept. of
 # Energy).  All rights reserved.
@@ -25,7 +25,7 @@
 
 # Initialize the autoconf system for the specified tool, version and mailing list
 AC_PREREQ([2.71])
-AC_INIT([iperf],[3.10.1],[https://github.com/esnet/iperf],[iperf],[https://software.es.net/iperf/])
+AC_INIT([iperf],[3.15],[https://github.com/esnet/iperf],[iperf],[https://software.es.net/iperf/])
 m4_include([config/ax_check_openssl.m4])
 m4_include([config/iperf_config_static_bin.m4])
 AC_LANG(C)
@@ -169,6 +169,18 @@ if test "x$iperf3_cv_header_tcp_congestion" = "xyes"; then
     AC_DEFINE([HAVE_TCP_CONGESTION], [1], [Have TCP_CONGESTION sockopt.])
 fi
 
+# Check for TCP_USER_TIMEOUT sockopt (believed to be Linux 2.6.37+ only)
+AC_CACHE_CHECK([TCP_USER_TIMEOUT socket option],
+[iperf3_cv_header_tcp_user_timeout],
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([[#include <netinet/tcp.h>]],
+                   [[int foo = TCP_USER_TIMEOUT;]])],
+  iperf3_cv_header_tcp_user_timeout=yes,
+  iperf3_cv_header_tcp_user_timeout=no))
+if test "x$iperf3_cv_header_tcp_user_timeout" = "xyes"; then
+    AC_DEFINE([HAVE_TCP_USER_TIMEOUT], [1], [Have TCP_USER_TIMEOUT sockopt.])
+fi
+
 # Check for IPv6 flowlabel support (believed to be Linux only)
 # We check for IPV6_FLOWLABEL_MGR in <linux/in6.h> even though we
 # don't use that file directly (we have our own stripped-down
@@ -293,6 +305,7 @@ AC_CHECK_MEMBER([struct tcp_info.tcpi_snd_wnd],
 [#ifdef HAVE_LINUX_TCP_H
 #include <linux/tcp.h>
 #else
+#include <sys/types.h>
 #include <netinet/tcp.h>
 #endif
 ])

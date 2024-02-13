@@ -1,6 +1,47 @@
 iperf3 Project News
 ===================
 
+2023-07-07:  iperf-3.14 released
+--------------------------------
+| URL:  https://downloads.es.net/pub/iperf/iperf-3.14.tar.gz
+| SHA256:  ``723fcc430a027bc6952628fa2a3ac77584a1d0bd328275e573fc9b206c155004``
+
+iperf 3.14 fixes a memory allocation hazard that allowed a remote user
+to crash an iperf3 process (server or client).
+
+More information on this specific fix can be found at:
+
+https://downloads.es.net/pub/iperf/esnet-secadv-2023-0001.txt.asc
+
+This version of iperf3 also includes a number of minor bug fixes,
+which are summarized in the release notes.
+
+2023-02-16:  iperf-3.13 released
+----------------------------------
+| URL:  https://downloads.es.net/pub/iperf/iperf-3.13.tar.gz
+| SHA256:  ``bee427aeb13d6a2ee22073f23261f63712d82befaa83ac8cb4db5da4c2bdc865``
+
+iperf 3.13 is primarily a bugfix release.
+
+
+2022-09-30:  iperf-3.12 released
+----------------------------------
+| URL:  https://downloads.es.net/pub/iperf/iperf-3.12.tar.gz
+| SHA256:  ``72034ecfb6a7d6d67e384e19fb6efff3236ca4f7ed4c518d7db649c447e1ffd6``
+
+iperf 3.12 is principally a bugfix release, although it includes an
+updated version of cJSON and adds a few new features.
+
+
+2022-01-28:  iperf-3.11 released
+----------------------------------
+| URL:  https://downloads.es.net/pub/iperf/iperf-3.11.tar.gz
+| SHA256:  ``de8cb409fad61a0574f4cb07eb19ce1159707403ac2dc01b5d175e91240b7e5f``
+
+iperf 3.11 is principally a bugfix release. Also GitHub
+Discussions are now supported.
+
+
 2021-06-02:  iperf-3.10.1 released
 ----------------------------------
 
@@ -306,7 +347,7 @@ This maintenance release includes the following bug fixes:
 * Some portability fixes for OpenBSD and Solaris have been merged from
   the mainline.
 
-As always, more details can be found in the ``RELEASE_NOTES`` file in
+As always, more details can be found in the ``RELNOTES.md`` file in
 the source distribution.
 
 2014-06-16:  Project documentation on GitHub Pages
@@ -337,7 +378,7 @@ enhancements and bug fixes.  Highlights:
 * A number of bugs with ``--json`` output have been fixed.
 
 A more extensive list of changes can always be found in the
-``RELEASE_NOTES`` file in the source distribution.
+``RELNOTES.md`` file in the source distribution.
 
 Note:  An iperf-3.0.4 release was planned and tagged, but not
 officially released.
@@ -369,7 +410,7 @@ This is the second maintenance release of iperf 3.0, containing a few bug fixes 
 * A possible buffer overflow related to error output has been fixed.
   (This is not believed to be exploitable.)
 
-More information on changes can be found in the ``RELEASE_NOTES``
+More information on changes can be found in the ``RELNOTES.md``
 file in the source distribution.
 
 2014-03-10:  iperf-3.0.2 released
@@ -392,7 +433,7 @@ GitHub.  Of particular interest:
 * libiperf is now built as both a shared and static library; by
   default, the iperf3 binary links to the shared library.
 
-More information on changes can be found in the ``RELEASE_NOTES``
+More information on changes can be found in the ``RELNOTES.md``
 file in the source distribution.
 
 2014-02-28:  iperf migrated to GitHub
@@ -410,6 +451,5 @@ https://github.com/esnet/iperf
 
 During development, there were various distributions of the source
 code unofficially released carrying a 3.0.0 version number.  Because
-of the possiblity for confusion, this first public release of iperf3
+of the possibility for confusion, this first public release of iperf3
 was numbered 3.0.1.
-

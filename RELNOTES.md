@@ -1,6 +1,187 @@
 iperf3 Release Notes
 ====================
 
+iperf-3.15 2023-09-14
+---------------------
+
+* Notable user-visible changes
+
+  * Several bugs that could allow the iperf3 server to hang waiting
+    for input on the control connection has been fixed. ESnet thanks
+    Jorge Sancho Larraz from Canonical for reporting this issue. For
+    more information, see:
+    https://downloads.es.net/pub/iperf/esnet-secadv-2023-0002.txt.asc
+
+  * A bug that caused garbled output with UDP tests on 32-bit hosts
+    has been fixed (PR #1554, PR #1556). This bug was introduced in
+    iperf-3.14.
+
+  * A bug in counting UDP messages has been fixed (PR #1367, PR
+    #1380).
+
+iperf-3.14 2023-07-07
+---------------------
+
+* Notable user-visible changes
+
+  * A memory allocation hazard was fixed (Issue #1542/PR #1543). For
+    more information see:
+    https://downloads.es.net/pub/iperf/esnet-secadv-2023-0001.txt.asc
+
+  * JSON output was improved, such as print JSON numbers as signed (PR
+    #1539, Issue #1435), the exit code when doing JSON output was
+    fixed (PR #1523), and client_api was fixed so that it still
+    returns an error code when JSON is enabled (Issue #1405).  Also,
+    duplicate fields when using multiple streams was removed from the
+    JSON output (#1492).
+
+  * Prevent UDP packet count and operations overflow (PR #1536/Issue
+    #1534).
+
+  * Statistics are fixed when --omit is used (Issue #1489/PR #1498).
+
+* Developer-visible changes
+
+  * CI builds and tests using GitHub actions have been added (PR
+    #1519).
+
+  * A fix for Android "unable to create a new stream error" was added
+    (PR #1506).
+
+  * Support for Voice Admit DSCP code point from RFC 5865 was added
+    (PR #1490).
+
+  * A fix for preventing a crash when RSA public key path doesn't
+    exist was fixed (PR #1488/Issue #1471).
+
+iperf-3.13 2023-02-16
+---------------------
+
+* Notable user-visible changes
+
+  * fq-rate (PR #1461, Issue #1366), and bidirectional flag (Issue #1428,
+    PR #1429) were added to the JSON output.
+
+  * Added support for OpenBSD including cleaning up endian handling (PR #1396)
+    and support for TCP_INFO on systems where it was implemented (PR #1397).
+
+  * Fixed bug in how TOS is set in mapped v4 (PR #1427).
+
+  * Corrected documentation, such as updating binary download links and text
+    (Issue #1459), updating version on iperf3 websites, and fixing an
+    incorrect error message (Issue #1441).
+
+  * Fixed crash on rcv-timeout with JSON logfile (#1463, #1460, issue #1360,
+    PR #1369).
+
+  * Fixed a bug that prevented TOS/DSCP from getting set correctly for reverse
+    tests (PR #1427, Issue #638).
+
+* Developer-visible changes
+
+  * Getter and setter are now available for bind_dev (PR #1419).
+
+  * Added missing getter for bidirectional tests (PR #1453).
+
+  * Added minor changes to clean up .gitignore and error messages (#1408).
+
+  * Made sure configure scripts are runnable with /bin/sh (PR #1398).
+
+  * Cleaned up RPM spec, such as adding missing RPM build dependencies, dropping
+    EL5 and removing outdated %changelog (PR #1401) to make.
+
+  * Added a fix for a resource leak bug in function iperf_create_pidfile(#1443).
+
+
+iperf-3.12 2022-09-30
+---------------------
+
+* Notable user-visible changes
+
+  * cJSON has been updated to version 1.7.15 (#1383).
+
+  * The --bind <host>%<dev> option syntax now works properly (#1360 /
+    #1371).
+
+  * A server-side file descriptor leak with the --logfile option has
+    been fixed (#1369 / #1360 / #1369 / #1389 / #1393).
+
+  * A bug that caused some large values from TCP_INFO to be misprinted
+    as negative numbers has been fixed (#1372).
+
+  * Using the -k or -n flags with --reverse no longer leak into future
+    tests (#1363 / #1364).
+
+  * There are now various debug level options available with the
+    --debug option. These can be used to adjust the amount of
+    debugging output (#1327).
+
+  * A new --snd-timeout option has been added to set a termination
+    timeout for idle TCP connections (#1215 / #1282).
+
+  * iperf3 is slightly more robust to out-of-order packets during UDP
+    connection setup in --reverse mode (#914 / #1123 / #1182 / #1212 /
+    #1260).
+
+  * iperf3 will now use different ports for each direction when the
+    --cport and --bdir options are set (#1249 / #1259).
+
+  * The iperf3 server will now exit if it can't open its log file
+    (#1225 / #1251).
+
+  * Various help message and output fixes have been made (#1299 /
+    #1330 / #1345 / #1350).
+
+  * Various compiler warnings have been fixed (#1211 / #1316).
+
+* Developer-visible changes
+
+  * Operation of bootstrap.sh has been fixed and simplified (#1335 /
+    #1325).
+    
+  * Flow label support / compatibility under Linux has been improved
+    (#1310).
+    
+  * Various minor memory leaks have been fixed (#1332 / #1333).
+
+  * A getter/setter has been added for the bind_port parameter
+    (--cport option). (#1303, #1305)
+
+  * Various internal documentation improvements (#1265 / #1285 / #1304).
+
+iperf-3.11 2022-01-31
+---------------------
+
+* Notable user-visible changes
+
+  * Update links to Discussions in documentation
+
+  * Fix DSCP so that TOS = DSCP * 4 (#1162)
+
+  * Fix --bind-dev for TCP streams (#1153)
+
+  * Fix interface specification so doesn't overlap with IPv6 link-local addresses for -c and -B (#1157, #1180)
+
+  * Add get/set test_unit_format function declaration to iperf_api.h
+
+  * Auto adjustment of test-end condition for file transfers (-F), if no end condition is set, it will automatically adjust it to file size in bytes
+
+  * Exit if idle time expires waiting for a connection in one-off mode (#1187, #1197)
+
+  * Support zerocopy by reverse mode (#1204)
+
+  * Update help and manpage text for #1157, support bind device
+
+  * Consistently print target_bandwidth in JSON start section (#1177)
+
+  * Test bitrate added to JSON output (#1168)
+
+  * Remove fsync call after every write to receiving --file (#1176, #1159)
+
+  * Update documentation for -w (#1175)
+
+  * Fix for #952, different JSON object names for bidir reverse channel
+
 iperf-3.10.1 2021-06-03
 -----------------------
 
@@ -366,7 +547,7 @@ iperf 3.2 2017-06-26
     is primarily a cosmetic change to prevent these fairly meaningless
     intervals from showing up in the output (#278).
 
-  * Compatiblity note: Users running iperf3 3.2 or newer from the
+  * Compatibility note: Users running iperf3 3.2 or newer from the
     bwctl utility will need to obtain version 1.6.3 or newer of bwctl.
     Note that bwctl, a component of the perfSONAR toolkit, has been
     deprecated in favor of pScheduler since the release of perfSONAR
@@ -858,7 +1039,7 @@ iperf 3.0b4 2010-08-02
   * Setting TCP window size (-w) is now supported
   * Updates to iperf_error
       * Added new errors
-      * Should generate more relavent messages
+      * Should generate more relevant messages
   * Stream list now managed by queue.h macros
   * Test structures are now kept intact after a test is run (for API users)
   * Improved interval timer granularity
@@ -871,7 +1052,7 @@ iperf 3.0b3 2010-07-23
   * Better error handling
       * All errors now handled with iperf_error()
       * All functions that can return errors return NULL or -1 on error and set i_errno appropriately
-  * Iperf API intruduced
+  * Iperf API introduced
       * Support for adding new protocols
       * Added support for callback functions
           * on_connect - executes after a connection is made to the server

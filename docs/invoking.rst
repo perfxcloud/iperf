@@ -4,7 +4,7 @@ Invoking iperf3
 iperf3 includes a manual page listing all of the command-line options.
 The manual page is the most up-to-date reference to the various flags and parameters.
 
-For sample command line usage, see: 
+For sample command line usage, see:
 
 https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/iperf/
 
@@ -115,7 +115,7 @@ the executable.
    
           Either the client or the server can produce its output in a JSON struc-
           ture,  useful for integration with other programs, by passing it the -J
-          flag.  Because the contents of the JSON structure  are  only  competely
+          flag.  Because the contents of the JSON structure are  only  completely
           known after the test has finished, no JSON output will be emitted until
           the end of the test.
    
@@ -157,13 +157,18 @@ the executable.
                  server's affinity for just that one test, using the n,m form  of
                  argument.   Note  that  when  using this feature, a process will
                  only be bound to a single CPU (as opposed to  a  set  containing
-                 potentialy multiple CPUs).
+                 potentially multiple CPUs).
    
-          -B, --bind host
-                 bind  to  the  specific  interface associated with address host.
-                 --bind-dev dev.ft R bind to  the  specified  network  interface.
-                 This  option  uses SO_BINDTODEVICE, and may require root permis-
-                 sions.  (Available on Linux and possibly other systems.)
+          -B, --bind host[%dev]
+                 bind to the specific interface associated with address host.  If
+                 an optional interface is specified, it is treated as a  shortcut
+                 for  --bind-dev  dev.   Note  that  a percent sign and interface
+                 device name are required for IPv6 link-local address literals.
+   
+          --bind-dev dev
+                 bind to the  specified  network  interface.   This  option  uses
+                 SO_BINDTODEVICE,  and  may require root permissions.  (Available
+                 on Linux and possibly other systems.)
    
           -V, --verbose
                  give more detailed output
@@ -191,6 +196,15 @@ the executable.
                  receiver will halt a test if no data is received from the sender
                  for this number of ms (default to 12000 ms, or 2 minutes).
    
+          --snd-timeout #
+                 set timeout for unacknowledged TCP data (on both test  and  con-
+                 trol connections) This option can be used to force a faster test
+                 timeout in case of  a  network  partition  during  a  test.  The
+                 required  parameter is specified in ms, and defaults to the sys-
+                 tem settings.  This functionality depends on the  TCP_USER_TIME-
+                 OUT socket option, and will not work on systems that do not sup-
+                 port it.
+   
           -d, --debug
                  emit debugging output.  Primarily (perhaps exclusively)  of  use
                  to developers.
@@ -210,7 +224,14 @@ the executable.
                  run the server in background as a daemon
    
           -1, --one-off
-                 handle one client connection, then exit.
+                 handle  one  client  connection,  then exit.  If an idle time is
+                 set, the server will exit after that amount of time with no con-
+                 nection.
+   
+          --idle-timeout n
+                 restart  the  server  after n seconds in case it gets stuck.  In
+                 one-off mode, this is the number of seconds the server will wait
+                 before exiting.
    
           --server-bitrate-limit n[KMGT]
                  set a limit on the server side, which will cause a test to abort
@@ -239,10 +260,13 @@ the executable.
                  during the authentication process.
    
    CLIENT SPECIFIC OPTIONS
-          -c, --client host
+          -c, --client host[%dev]
                  run  in  client  mode,  connecting  to the specified server.  By
                  default, a test consists of sending data from the client to  the
-                 server, unless the -R flag is specified.
+                 server,  unless the -R flag is specified.  If an optional inter-
+                 face is specified, it is treated as a  shortcut  for  --bind-dev
+                 dev.   Note  that  a  percent sign and interface device name are
+                 required for IPv6 link-local address literals.
    
           --sctp use SCTP rather than TCP (FreeBSD and Linux)
    
@@ -250,42 +274,42 @@ the executable.
                  use UDP rather than TCP
    
           --connect-timeout n
-                 set  timeout  for establishing the initial control connection to
-                 the server, in milliseconds.  The default behavior is the  oper-
-                 ating  system's  timeout for TCP connection establishment.  Pro-
-                 viding a shorter value may speed up detection of a  down  iperf3
+                 set timeout for establishing the initial control  connection  to
+                 the  server, in milliseconds.  The default behavior is the oper-
+                 ating system's timeout for TCP connection  establishment.   Pro-
+                 viding  a  shorter value may speed up detection of a down iperf3
                  server.
    
           -b, --bitrate n[KMGT]
-                 set  target  bitrate  to n bits/sec (default 1 Mbit/sec for UDP,
-                 unlimited for TCP/SCTP).  If  there  are  multiple  streams  (-P
-                 flag),  the  throughput  limit  is  applied  separately  to each
-                 stream.  You can also add a '/' and  a  number  to  the  bitrate
+                 set target bitrate to n bits/sec (default 1  Mbit/sec  for  UDP,
+                 unlimited  for  TCP/SCTP).   If  there  are multiple streams (-P
+                 flag), the  throughput  limit  is  applied  separately  to  each
+                 stream.   You  can  also  add  a '/' and a number to the bitrate
                  specifier.  This is called "burst mode".  It will send the given
-                 number of packets without  pausing,  even  if  that  temporarily
-                 exceeds  the  specified  throughput  limit.   Setting the target
-                 bitrate to 0 will disable bitrate  limits  (particularly  useful
+                 number  of  packets  without  pausing,  even if that temporarily
+                 exceeds the specified  throughput  limit.   Setting  the  target
+                 bitrate  to  0  will disable bitrate limits (particularly useful
                  for UDP tests).  This throughput limit is implemented internally
-                 inside iperf3, and is available on all platforms.  Compare  with
-                 the  --fq-rate flag.  This option replaces the --bandwidth flag,
+                 inside  iperf3, and is available on all platforms.  Compare with
+                 the --fq-rate flag.  This option replaces the --bandwidth  flag,
                  which is now deprecated but (at least for now) still accepted.
    
           --pacing-timer n[KMGT]
-                 set  pacing  timer  interval  in  microseconds   (default   1000
-                 microseconds,  or 1 ms).  This controls iperf3's internal pacing
-                 timer for the -b/--bitrate  option.   The  timer  fires  at  the
-                 interval  set  by  this parameter.  Smaller values of the pacing
-                 timer parameter smooth out the traffic emitted  by  iperf3,  but
-                 potentially  at  the  cost  of  performance due to more frequent
+                 set   pacing   timer  interval  in  microseconds  (default  1000
+                 microseconds, or 1 ms).  This controls iperf3's internal  pacing
+                 timer  for  the  -b/--bitrate  option.   The  timer fires at the
+                 interval set by this parameter.  Smaller values  of  the  pacing
+                 timer  parameter  smooth  out the traffic emitted by iperf3, but
+                 potentially at the cost of  performance  due  to  more  frequent
                  timer processing.
    
           --fq-rate n[KMGT]
                  Set a rate to be used with fair-queueing based socket-level pac-
-                 ing,  in bits per second.  This pacing (if specified) will be in
-                 addition to any pacing due to iperf3's internal throughput  pac-
-                 ing  (-b/--bitrate flag), and both can be specified for the same
-                 test.  Only available on platforms  supporting  the  SO_MAX_PAC-
-                 ING_RATE  socket  option (currently only Linux).  The default is
+                 ing, in bits per second.  This pacing (if specified) will be  in
+                 addition  to any pacing due to iperf3's internal throughput pac-
+                 ing (-b/--bitrate flag), and both can be specified for the  same
+                 test.   Only  available  on platforms supporting the SO_MAX_PAC-
+                 ING_RATE socket option (currently only Linux).  The  default  is
                  no fair-queueing based pacing.
    
           --no-fq-socket-pacing
@@ -302,32 +326,38 @@ the executable.
                  number of blocks (packets) to transmit (instead of -t or -n)
    
           -l, --length n[KMGT]
-                 length  of  buffer to read or write.  For TCP tests, the default
+                 length of buffer to read or write.  For TCP tests,  the  default
                  value is 128KB.  In the case of UDP, iperf3 tries to dynamically
-                 determine  a  reasonable  sending size based on the path MTU; if
-                 that cannot be determined it uses 1460 bytes as a sending  size.
+                 determine a reasonable sending size based on the  path  MTU;  if
+                 that  cannot be determined it uses 1460 bytes as a sending size.
                  For SCTP tests, the default size is 64KB.
    
           --cport port
-                 bind  data  streams  to  a specific client port (for TCP and UDP
+                 bind data streams to a specific client port  (for  TCP  and  UDP
                  only, default is to use an ephemeral port)
    
           -P, --parallel n
-                 number of parallel client streams to run. Note  that  iperf3  is
-                 single  threaded,  so  if you are CPU bound, this will not yield
+                 number  of  parallel  client streams to run. Note that iperf3 is
+                 single threaded, so if you are CPU bound, this  will  not  yield
                  higher throughput.
    
           -R, --reverse
-                 reverse the direction of a test, so that the server  sends  data
+                 reverse  the  direction of a test, so that the server sends data
                  to the client
    
           --bidir
-                 test  in  both  directions  (normal  and reverse), with both the
+                 test in both directions (normal  and  reverse),  with  both  the
                  client and server sending and receiving data simultaneously
    
           -w, --window n[KMGT]
-                 window size / socket buffer size (this gets sent to  the  server
-                 and used on that side too)
+                 set  socket  buffer size / window size.  This value gets sent to
+                 the server and used on that side too; on both sides this  option
+                 sets  both  the sending and receiving socket buffer sizes.  This
+                 option can be used to set (indirectly) the  maximum  TCP  window
+                 size.   Note that on Linux systems, the effective maximum window
+                 size is approximately double what is specified  by  this  option
+                 (this  behavior  is  not  a bug in iperf3 but a "feature" of the
+                 Linux kernel, as documented by tcp(7) and socket(7)).
    
           -M, --set-mss n
                  set TCP/SCTP maximum segment size (MTU - 40 bytes)
@@ -346,9 +376,10 @@ the executable.
                  can be used, i.e. 52, 064 and 0x34 all specify the same value.
    
           --dscp dscp
-                 set the IP DSCP bits.  Both  numeric  and  symbolic  values  are
-                 accepted.  Numeric values can be specified in decimal, octal and
-                 hex (see --tos above).
+                 set  the  IP  DSCP  bits.   Both numeric and symbolic values are
+                 accepted. Numeric values can be specified in decimal, octal  and
+                 hex  (see  --tos  above).  To set both the DSCP bits and the ECN
+                 bits, use --tos.
    
           -L, --flowlabel n
                  set the IPv6 flow label (currently only supported on Linux)
@@ -375,8 +406,8 @@ the executable.
                  instead of the usual write(2).
    
           -O, --omit n
-                 Omit the first n seconds of the test, to skip past the TCP slow-
-                 start period.
+                 Perform pre-test for N seconds and omit the pre-test statistics,
+                 to skip past the TCP slow-start period.
    
           -T, --title str
                  Prefix every output line with this string.
@@ -480,9 +511,8 @@ the executable.
    
    
    
-   ESnet                            February 2021
-   IPERF3(1)
+   ESnet                           September 2022                       IPERF3(1)
+
 
 The iperf3 manual page will typically be installed in manual
 section 1.
-
