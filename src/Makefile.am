@@ -25,8 +25,6 @@ libiperf_la_SOURCES     = \
                         iperf_server_api.c \
                         iperf_tcp.c \
                         iperf_tcp.h \
-			iperf_http.c \
-			iperf_http.h \
                         iperf_udp.c \
                         iperf_udp.h \
                         iperf_sctp.c \

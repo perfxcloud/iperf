@@ -76,7 +76,6 @@
 #include "iperf_api.h"
 #include "iperf_udp.h"
 #include "iperf_tcp.h"
-#include "iperf_http.h"
 #if defined(HAVE_SCTP_H)
 #include "iperf_sctp.h"
 #endif /* HAVE_SCTP_H */
@@ -1063,7 +1062,6 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
         {"server", no_argument, NULL, 's'},
         {"client", required_argument, NULL, 'c'},
         {"udp", no_argument, NULL, 'u'},
-	{"http", no_argument, NULL, OPT_HTTP},
         {"bitrate", required_argument, NULL, 'b'},
         {"bandwidth", required_argument, NULL, 'b'},
 	{"server-bitrate-limit", required_argument, NULL, OPT_SERVER_BITRATE_LIMIT},
@@ -1243,10 +1241,6 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 set_protocol(test, Pudp);
 		client_flag = 1;
                 break;
-	    case OPT_HTTP:
-		warning("HTTP flag set");
-		set_protocol(test, Phttp);
-		break;
             case OPT_SCTP:
 #if defined(HAVE_SCTP_H)
                 set_protocol(test, Psctp);
@@ -2859,7 +2853,7 @@ protocol_free(struct protocol *proto)
 int
 iperf_defaults(struct iperf_test *testp)
 {
-    struct protocol *tcp, *http, *udp;
+    struct protocol *tcp, *udp;
 #if defined(HAVE_SCTP_H)
     struct protocol *sctp;
 #endif /* HAVE_SCTP_H */
@@ -2930,22 +2924,6 @@ iperf_defaults(struct iperf_test *testp)
     tcp->recv = iperf_tcp_recv;
     tcp->init = NULL;
     SLIST_INSERT_HEAD(&testp->protocols, tcp, protocols);
-
-    /* Experimental perfx.cloud HTTP protocol */
-    http = protocol_new();
-    if(!http)
-	return -1;
-
-    http->id = Phttp;
-    http->name = "HTTP";
-    http->accept = iperf_http_accept;
-    http->listen = iperf_http_listen;
-    http->connect = iperf_http_connect;
-    http->send = iperf_http_send;
-    http->recv = iperf_http_recv;
-    http->init = iperf_http_init;
-    SLIST_INSERT_HEAD(&testp->protocols, http, protocols);
-    /* end experimental perfx.cloud HTTP protocol */
 
     udp = protocol_new();
     if (!udp) {

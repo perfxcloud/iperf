@@ -52,7 +52,6 @@
 #include "iperf_api.h"
 #include "iperf_udp.h"
 #include "iperf_tcp.h"
-#include "iperf_http.h"
 #include "iperf_util.h"
 #include "timer.h"
 #include "iperf_time.h"
