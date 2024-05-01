@@ -1,6 +1,30 @@
 iperf3 Project News
 ===================
 
+2023-12-01:  iperf-3.16 released
+--------------------------------
+| URL:  https://downloads.es.net/pub/iperf/iperf-3.16.tar.gz
+| SHA256:
+``cc740c6bbea104398cc3e466befc515a25896ec85e44a662d5f4a767b9cf713e``
+
+iperf 3.16 uses multiple threads to serve parallel tests for improved
+throughput on high-speed links. It also includes support for
+OpenSSL 3. More details are provided in the release notes.
+
+2023-09-14:  iperf-3.15 released
+--------------------------------
+| URL:  https://downloads.es.net/pub/iperf/iperf-3.15.tar.gz
+| SHA256:  ``bdb77c11f72bce90214883159577fa24412013e62b2083cf5f54391d79b1d8ff``
+
+iperf 3.15 fixes that could cause an iperf3 server process to hang
+waiting for input on the control connection. For more information,
+please see:
+
+https://downloads.es.net/pub/iperf/esnet-secadv-2023-0002.txt.asc
+
+This version of iperf3 also includes several other minor bug fixes,
+which are summarized in the release notes.
+
 2023-07-07:  iperf-3.14 released
 --------------------------------
 | URL:  https://downloads.es.net/pub/iperf/iperf-3.14.tar.gz
