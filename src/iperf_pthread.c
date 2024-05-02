@@ -7,6 +7,7 @@
  */
 
 #include <signal.h>
+#include <string.h>
 #include "iperf_pthread.h"
 
 int pthread_setcanceltype(int type, int *oldtype) { return 0; }
